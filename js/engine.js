@@ -25,8 +25,8 @@ var Engine = (function(global) {
         ctx = canvas.getContext('2d'),
         lastTime;
 
-    canvas.width = 505;
-    canvas.height = 606;
+    canvas.width = 1717;
+    canvas.height = 1010;
     doc.body.appendChild(canvas);
 
     /* This function serves as the kickoff point for the game loop itself
@@ -47,6 +47,8 @@ var Engine = (function(global) {
          */
         update(dt);
         render();
+
+
 
         /* Set our lastTime variable which is used to determine the time delta
          * for the next time this function is called.
@@ -80,7 +82,7 @@ var Engine = (function(global) {
      */
     function update(dt) {
         updateEntities(dt);
-        // checkCollisions();
+        //collision();
     }
 
     /* This is called by the update function  and loops through all of the
@@ -93,10 +95,34 @@ var Engine = (function(global) {
     function updateEntities(dt) {
         allEnemies.forEach(function(enemy) {
             enemy.update(dt);
+            
         });
         player.update();
+        collisionDetect();
+        victory();
     }
 
+//collision functions test for contact 
+
+    function collisionDetect() {
+        allEnemies.forEach(function(enemy) {
+            if ((enemy.x + 50 > player.x) && (enemy.x - 50 < player.x)) {
+                if ((enemy.y + 15 > player.y) && (enemy.y - 15 < player.y)) {
+                    init();
+                }
+            }
+        });
+    };
+
+// victory function test for reaching top of board
+
+    function victory() {
+        allEnemies.forEach(function(enemy) {
+            if (upCount == 9) {
+                init();
+            }
+        });
+    };
     /* This function initially draws the "game level", it will then call
      * the renderEntities function. Remember, this function is called every
      * game tick (or loop of the game engine) because that's how games work -
@@ -108,15 +134,19 @@ var Engine = (function(global) {
          * for that particular row of the game level.
          */
         var rowImages = [
-                'images/water-block.png',   // Top row is water
+                'images/grass-block.png',
+                'images/water-block.png',
+                'images/water-block.png',
+                'images/water-block.png',
+                'images/stone-block.png',   // Top row is water
                 'images/stone-block.png',   // Row 1 of 3 of stone
                 'images/stone-block.png',   // Row 2 of 3 of stone
                 'images/stone-block.png',   // Row 3 of 3 of stone
                 'images/grass-block.png',   // Row 1 of 2 of grass
                 'images/grass-block.png'    // Row 2 of 2 of grass
             ],
-            numRows = 6,
-            numCols = 5,
+            numRows = 10,
+            numCols = 17,
             row, col;
 
         /* Loop through the number of rows and columns we've defined above
@@ -155,12 +185,21 @@ var Engine = (function(global) {
         player.render();
     }
 
+
     /* This function does nothing but it could have been a good place to
      * handle game reset states - maybe a new game menu or a game over screen
      * those sorts of things. It's only called once by the init() method.
      */
+
+// reset function restarts player location and counters
+
     function reset() {
-        // noop
+        player.x = 808;
+        player.y = 725;
+        upCount = 0;
+        downCount = 0;
+        rightCount = 0;
+        leftCount = 0;
     }
 
     /* Go ahead and load all of the images we know we're going to need to
@@ -172,7 +211,10 @@ var Engine = (function(global) {
         'images/water-block.png',
         'images/grass-block.png',
         'images/enemy-bug.png',
-        'images/char-boy.png'
+        'images/enemy-bug-reverse.png',
+        'images/enemy-bug-shark.png',
+        'images/enemy-bug-shark-reverse.png',
+        'images/char-boy.png',
     ]);
     Resources.onReady(init);
 
