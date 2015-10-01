@@ -1,5 +1,9 @@
-// Enemies our player must avoid
+'use strict'
 
+//app.js contains functions for creating player and enemies
+//and also for creating player and enemy behaviors
+
+// Enemies our player must avoid
 var Enemy = function(x, y, speed, type) {
     // Variables applied to each of our instances go here,
     // we've provided one for you to get started
@@ -30,15 +34,14 @@ var Enemy = function(x, y, speed, type) {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     
-// creates enemy behavior 
-
+// creates enemy behavior for enemy bug going left to right
     if (this.sprite == 'images/enemy-bug.png') {
         this.x = this.x + this.speed * dt;
         if (this.x > 1800) {
             this.x = -100;
         }
     }
-
+// creates enemy behavior for enemy bug going right to left
     if (this.sprite == 'images/enemy-bug-reverse.png') {
         this.x = this.x - this.speed * dt;
         if (this.x < -100) {
@@ -46,14 +49,14 @@ Enemy.prototype.update = function(dt) {
             this.speed = this.speed * (Math.random() + .50);
         }
     }
-
+// creates enemy behavior for shark bug going left to right
     if (this.sprite == 'images/enemy-bug-shark.png') {
             this.x = this.x + this.speed * dt * upCount;
             if (this.x > 1800) {
                 this.x = -100;
             }
     }
-
+// creates enemy behavior shark bug going right to left
     if (this.sprite == 'images/enemy-bug-shark-reverse.png') {
         this.x = this.x - this.speed * dt;
         if (this.x < -100) {
@@ -83,7 +86,6 @@ var Player = function(playerX, playerY) {
 };
 
 // global player movement count
-
     var upCount = 0;
     var downCount = 0;
     var rightCount = 0;
@@ -102,7 +104,7 @@ Player.prototype.render = function() {
 Player.prototype.handleInput = function(key) {
 
 //handles inputs and counts player movements
-
+// handles up movement
 if (key == 'up') {
     if (upCount < 9) {
         this.y = this.y - 83;
@@ -110,7 +112,7 @@ if (key == 'up') {
         downCount = downCount -1;
     }
 }
-
+//handles down movement
 if (key == 'down') {
     if (downCount < 0) {
         this.y = this.y + 83;
@@ -118,7 +120,7 @@ if (key == 'down') {
         downCount = downCount + 1;
     }
 }
-
+//handles left movement
 if (key == 'left') {
     if (leftCount < 8) {
         this.x = this.x - 101;
@@ -126,7 +128,7 @@ if (key == 'left') {
         rightCount = rightCount - 1;
     }
 }
-
+//handles right movement
 if (key == 'right') {
     if (rightCount < 8) {
         this.x = this.x + 101;
@@ -137,11 +139,10 @@ if (key == 'right') {
 
 
 };
-
+//creates a new player
 var player = new Player();
 
 // creates new enemies
-
 var allEnemies = [
     new Enemy(300, 50, 200, 'water-reverse'), //water first row
     new Enemy(900, 50, 200, 'water-reverse'), //water first row
@@ -162,6 +163,7 @@ var allEnemies = [
 
 ];
 
+//pushes enemies to screen
 allEnemies.push();
 // This listens for key presses and sends the keys to your
 // Player.handleInput() method. You don't need to modify this.
@@ -174,4 +176,3 @@ document.addEventListener('keyup', function(e) {
     };
     player.handleInput(allowedKeys[e.keyCode]);
 });
-
